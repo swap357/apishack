@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  <meta charset="UTF-8">
+  <title>Postbox (Search Bar)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+
+
+      <style>
+      /* NOTE: The styles were added inline because Prefixfree needs access to your styles and they must be inlined if they are on local disk! */
+      * {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #f7f6fe;
+  background-repeat: none;
+  height: 300vh;
+  font-size: 16px;
+  font-family: -apple-system,  BlinkMacSystemFont,  "Segoe UI",  Roboto,  Oxygen-Sans,  Ubuntu,  Cantarell,  "Helvetica Neue",  sans-serif;
+}
+
+.postbox {
+  position: relative;
+  width: 90%;
+  max-width: 550px;
+  margin: 96px auto 24px;
+  height: 56px;
+  background-color: #fff;
+  border-radius: 4px;
+  box-shadow: 0px 4px 15px 0px rgba(114, 117, 180, 0.24), 0px 0px 40px 40px rgba(247, 246, 254, 0.8);
+  transition: box-shadow 0.3s ease-in;
+}
+.postbox:hover {
+  box-shadow: 0px 4px 15px 0px rgba(114, 117, 180, 0.64), 0px 0px 40px 40px rgba(247, 246, 254, 0.8);
+}
+.postbox.active {
+  box-shadow: 0px 4px 15px 0px rgba(114, 117, 180, 0.56), 0px 0px 60px 60px #f7f6fe;
+}
+.postbox.active input {
+  display: block;
+  cursor: text;
+}
+.postbox.active:hover {
+  box-shadow: 0px 4px 15px 0px rgba(114, 117, 180, 0.64), 0px 0px 60px 60px #f7f6fe;
+}
+.postbox .search__section {
+  width: calc(100% - 57px);
+}
+.postbox input {
+  border: 0;
+  outline: 0;
+  padding: 0;
+  height: 56px;
+  width: calc(100% - 56px);
+  font-size: 18px;
+  margin: 0 56px;
+  cursor: pointer;
+}
+.postbox input::-webkit-input-placeholder {
+  color: #dadada;
+}
+.postbox input::-ms-input-placeholder {
+  color: #dadada;
+}
+.postbox input::-moz-placeholder {
+  color: #dadada;
+}
+.postbox .icon {
+  height: 24px;
+  width: 24px;
+}
+
+#menu-icon {
+  width: 56px;
+  height: 56px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  border-radius: 0 4px 4px 0;
+  user-select: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+}
+#menu-icon:hover, #menu-icon:active, #menu-icon:focus {
+  background-color: #f7f7f7;
+}
+#menu-icon::before {
+  content: "";
+  width: 1px;
+  height: 40px;
+  position: absolute;
+  top: 8px;
+  background-color: #eee;
+}
+#menu-icon .icon {
+  margin: 16px;
+}
+
+#search-icon {
+  width: 56px;
+  height: 100%;
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+#search-icon .icon {
+  margin: 16px;
+}
+
+.search-results {
+  position: relative;
+  width: 90%;
+  max-width: 550px;
+  margin: 0 auto;
+  background-color: #fff;
+  border-radius: 4px;
+  height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: all 0.3s ease-in;
+  box-shadow: 0px 4px 15px 0px rgba(114, 117, 180, 0.24), 0px 0px 25px 25px rgba(247, 246, 254, 0.6);
+}
+.search-results:hover {
+  box-shadow: 0px 4px 15px 0px rgba(114, 117, 180, 0.64), 0px 0px 25px 25px rgba(247, 246, 254, 0.6);
+}
+.search-results.active {
+  height: auto;
+  opacity: 1;
+}
+.search-results.active input {
+  display: block;
+  cursor: text;
+}
+.search-results.active:hover {
+  box-shadow: 0px 4px 15px 0px rgba(114, 117, 180, 0.64), 0px 0px 25px 25px rgba(247, 246, 254, 0.6);
+}
+.search-results .search__section {
+  width: calc(100% - 57px);
+}
+.search-results input {
+  border: 0;
+  outline: 0;
+  padding: 0;
+  height: 56px;
+  width: calc(100% - 56px);
+  font-size: 18px;
+  margin: 0 56px;
+  cursor: pointer;
+}
+.search-results input::-webkit-input-placeholder {
+  color: #dadada;
+}
+.search-results input::-ms-input-placeholder {
+  color: #dadada;
+}
+.search-results input::-moz-placeholder {
+  color: #dadada;
+}
+.search-results .icon {
+  height: 24px;
+  width: 24px;
+}
+
+.result {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin: 0;
+  color: rgba(0, 0, 0, 0.84);
+  height: 60px;
+  padding-right: 16px;
+  cursor: pointer;
+  position: relative;
+}
+.result:hover {
+  background-color: #F5F5F5;
+}
+.result::after {
+  content: "";
+  width: calc(100% - 88px);
+  height: 1px;
+  background-color: rgba(0, 0, 0, 0.12);
+  position: absolute;
+  bottom: 0;
+  right: 16px;
+}
+.result:last-of-type::after {
+  height: 0;
+}
+.result .result__picture {
+  height: 40px;
+  width: 40px;
+  padding: 2px;
+  margin: 0 16px;
+  border-radius: 20px;
+  float: left;
+}
+.result .result__details {
+  float: left;
+  font-size: 16px;
+}
+.result .result__details .result__subtitle {
+  display: block;
+  color: rgba(0, 0, 0, 0.54);
+  font-size: 12px;
+}
+
+.hidden {
+  display: none;
+}
+
+.four-members {
+  display: block;
+}
+.four-members img {
+  width: 18px;
+  height: 18px;
+  float: left;
+  margin: 0;
+  display: block;
+  border-radius: 9px;
+}
+
+@media (min-width: 750px) {
+  #menu-icon {
+    display: none;
+  }
+
+  .postbox {
+    cursor: pointer;
+  }
+}
+
+    </style>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js"></script>
+
+</head>
+
+<body>
+
+
+<div class="postbox">
+  <div class="search__section">
+    <div id="search-icon">
+      <svg class="icon" fill="#dadada" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+        <path d="M0 0h24v24H0z" fill="none"/>
+      </svg>
+    </div>
+    <input type="text" placeholder="Find an API"/>
+  </div>
+
+  <a id="menu-icon">
+    <svg class="icon" fill="#dadada" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 0h24v24H0z" fill="none"/>
+      <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+    </svg>
+  </a>
+</div>
+
+<div class="search-results">
+  <a class="result">
+    <div class="result__picture four-members">
+            <img src="http://newsio.com/img/team/thomas.jpg" alt=""/>
+            <img src="http://newsio.com/img/team/halldor.jpg" alt=""/>
+            <img src="http://newsio.com/img/team/henrik.jpg" alt=""/>
+            <img src="http://newsio.com/img/team/martynas.jpg" alt=""/>
+
+            </div>
+    <div class="result__details">
+      Dev Discuss
+      <span class="result__subtitle">53 members</span>
+    </div>
+  </a>
+
+  <a class="result" id="example-result">
+    <img src="http://newsio.com/img/team/ignas.jpg" alt="" class="result__picture"/>
+    <div class="result__details">
+      Ignas Bagdonas
+      <span class="result__subtitle">Last seen 23 minutes ago</span>
+    </div>
+  </a>
+
+  <a class="result">
+    <img src="http://newsio.com/img/team/mads.jpg" alt="" class="result__picture"/>
+    <div class="result__details">
+      Mads Pelt
+      <span class="result__subtitle">Active now</span>
+    </div>
+  </a>
+
+    <a class="result">
+    <img src="http://www.flaticon.com/premium-icon/icons/svg/193/193970.svg" alt="" class="result__picture"/>
+    <div class="result__details">
+      End_of_year_report.pdf
+      <span class="result__subtitle">Shared by Henrik Cullen | 17 January</span>
+    </div>
+  </a>
+
+    <a class="result">
+    <img src="http://www.flaticon.com/premium-icon/icons/svg/193/193978.svg" alt="" class="result__picture"/>
+    <div class="result__details">
+      Financial Projections
+      <span class="result__subtitle">Shared by Thomas Heltborg Juul | 23 June 2016</span>
+    </div>
+  </a>
+
+
+</div>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
+
+
+
+    <script  src="js/index.js"></script>
+
+
+
+
+</body>
+
+</html>
